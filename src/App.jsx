@@ -643,7 +643,7 @@ function MiniStart() {
   if (done) {
     return (
       <div className="na-start-card na-start-done">
-        <RingIcon size={34} accentIndex={0} style={{ margin: "0 auto 18px" }} />
+        <RingIcon size={34} color="#B89968" style={{ margin: "0 auto 18px" }} />
         <h3>Takk! Vi tar kontakt.</h3>
         <p style={{ color: "var(--ink-dim)", lineHeight: 1.75 }}>
           Du hører fra oss innen én arbeidsdag — én kort, hyggelig prat om
@@ -895,11 +895,11 @@ function RingAssembly() {
         <g ref={zoomRef} className="na-ringasm-zoom">
           {RING_SEGMENTS.map((d, i) => (
             <g key={i} ref={(el) => (fragRefs.current[i] = el)} className="na-ringasm-frag">
-              <path d={d} fill="none" stroke={i === 0 ? "#B89968" : "#F2F0EB"} strokeWidth={26} strokeLinecap="round" />
+              <path d={d} fill="none" stroke="#F2F0EB" strokeWidth={26} strokeLinecap="round" />
             </g>
           ))}
         </g>
-        <text ref={(el) => (labelRefs.current[0] = el)} x="216" y="58" textAnchor="start" className="na-rlabel is-amber">AI</text>
+        <text ref={(el) => (labelRefs.current[0] = el)} x="216" y="58" textAnchor="start" className="na-rlabel">AI</text>
         <text ref={(el) => (labelRefs.current[1] = el)} x="120" y="246" textAnchor="middle" className="na-rlabel">NOABOVE</text>
         <text ref={(el) => (labelRefs.current[2] = el)} x="24" y="58" textAnchor="end" className="na-rlabel">DEG</text>
       </svg>
@@ -945,7 +945,7 @@ function BurgerMenu() {
       <div className={`na-menu ${open ? "is-open" : ""}`} role="dialog" aria-modal="true" aria-label="Meny">
         <div className="na-menu-inner">
           <div className="na-menu-brand" aria-hidden="true">
-            <RingIcon size={30} accentIndex={0} />
+            <RingIcon size={30} color="#B89968" />
           </div>
           <ul className="na-menu-links">
             {MENU_LINKS.map((l, i) => (
@@ -1390,7 +1390,7 @@ export default function App() {
                 </div>
               </li>
               <li className="na-reveal">
-                <RingIcon size={17} color="rgba(242,240,235,0.3)" accentIndex={0} style={{ flexShrink: 0, position: "relative", top: 2 }} />
+                <RingIcon size={17} color="rgba(242,240,235,0.3)" accentIndex={0} accent="#F2F0EB" style={{ flexShrink: 0, position: "relative", top: 2 }} />
                 <div>
                   <h4>AI</h4>
                   <p>
