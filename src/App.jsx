@@ -205,12 +205,12 @@ section { padding: 110px 0; position: relative; }
 .na-hero-stage { display: flex; flex-direction: column; align-items: center; }
 
 /* Lockup: NOABOVE med ringen som opphøyd null (x⁰ = 1 → alt blir én, ingen over)
-   padding-right kompenserer for ringen som henger utenfor ordet, slik at
-   hele lockupen (ord + ring) sentreres og aldri går utenfor rammen. */
+   Ringen ligger i tekstflyten rett etter ordet — ikke absolutt posisjonert —
+   så den følger alltid E-en uansett font, bredde og nettleser. */
 .na-lockup {
-  position: relative; display: inline-block;
-  font-size: clamp(36px, 8vw, 138px); line-height: 0.95;
-  padding-right: 0.68em; max-width: 100%;
+  display: inline-flex; align-items: flex-start;
+  font-size: clamp(36px, 7.6vw, 132px); line-height: 0.95;
+  white-space: nowrap;
 }
 .na-lockup-word {
   font-family: 'Syne', sans-serif; font-weight: 800;
@@ -220,8 +220,8 @@ section { padding: 110px 0; position: relative; }
 }
 .na-lockup-word span { display: inline-block; opacity: 0; white-space: pre; }
 .na-lockup-sup {
-  position: absolute; right: 0; top: 0;
-  transform: translateY(-0.04em);
+  display: inline-block; flex: none;
+  margin-left: 0.06em; transform: translateY(-0.04em);
 }
 .na-lockup-sup svg { width: 0.6em; height: 0.6em; display: block; opacity: 0; overflow: visible; }
 
