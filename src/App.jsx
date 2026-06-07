@@ -523,6 +523,56 @@ section { padding: 110px 0; position: relative; }
 .na-circle-labels h4 { font-family: var(--mono); font-size: 13px; letter-spacing: 0.1em; font-weight: 500; }
 .na-circle-labels p { color: var(--ink-dim); font-size: 14.5px; line-height: 1.7; margin-top: 6px; }
 
+/* ---------- Tilbudsflyt / konfigurator ---------- */
+.na-quote { border-top: 1px solid var(--line-soft); }
+.na-quote .na-start-card { margin-top: 50px; margin-left: 0; }
+.na-quote-card { max-width: 680px; }
+.na-quote-products {
+  margin-top: 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+}
+@media (max-width: 560px) { .na-quote-products { grid-template-columns: 1fr; } }
+.na-quote-product {
+  text-align: left; cursor: pointer; border-radius: 4px;
+  border: 1px solid var(--line); background: rgba(10,10,9,0.4);
+  padding: 22px 24px; display: flex; flex-direction: column; gap: 7px;
+  transition: border-color .25s, background .25s;
+}
+.na-quote-product:hover { border-color: rgba(242,240,235,0.3); }
+.na-quote-product.is-on {
+  border-color: var(--amber); background: rgba(184,153,104,0.1);
+}
+.na-quote-product-name {
+  font-family: var(--serif); font-size: 23px; color: var(--ink);
+}
+.na-quote-product-desc {
+  font-size: 13.5px; color: var(--ink-dim); line-height: 1.5;
+  font-family: var(--sans);
+}
+.na-quote-product-price {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em;
+  color: var(--amber); margin-top: 4px;
+}
+.na-quote-hint {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+  color: var(--ink-faint); font-style: normal;
+}
+.na-quote-estimate {
+  margin-top: 30px; padding: 20px 24px; border-radius: 4px;
+  border: 1px solid rgba(184,153,104,0.35); background: rgba(184,153,104,0.06);
+  display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+}
+.na-quote-estimate span {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--ink-dim);
+}
+.na-quote-estimate strong {
+  font-family: var(--serif); font-size: 26px; font-weight: 400; color: var(--ink);
+}
+.na-quote-estimate em {
+  font-family: var(--mono); font-size: 11px; color: var(--ink-faint);
+  font-style: normal; flex-basis: 100%;
+}
+
 /* ---------- Booking ---------- */
 .na-booking { border-top: 1px solid var(--line-soft); }
 .na-booking-embed {
@@ -965,6 +1015,7 @@ const MENU_LINKS = [
   { href: "#signatur", label: "Foto & film" },
   { href: "#prosess", label: "Slik jobber vi" },
   { href: "#modell", label: "Hva det koster" },
+  { href: "#tilbud", label: "Se din pris" },
   { href: "#befaring", label: "Book befaring" },
   { href: "#start", label: "Kom i gang — 20 sek", cta: true },
 ];
@@ -1091,6 +1142,170 @@ function BookingSection() {
         </p>
       </div>
     </section>
+  );
+}
+
+/* ---------- Tilbudsflyt: Pro-modul 02, i bruk på denne siden ----------
+   Kunden setter sammen sitt prosjekt og får veiledende pris med en gang.
+   Henvendelsen kommer ferdig strukturert. Samme TODO som MiniStart:
+   handleSubmit må kobles til et endepunkt (API-rute / Formspree). */
+
+const QUOTE_PRICES = {
+  basis: 14900,
+  pro: 49000,
+  ekstraModul: 10000,
+  fotodag: 12000,
+  flerspraak: 6000,
+};
+const PRO_MODULES = [
+  "Booking & kalender",
+  "Forespørsel & pristilbud",
+  "Kundeportal & status",
+  "Presentasjon & visning",
+];
+const nok = (n) => n.toLocaleString("nb-NO") + " kr";
+
+function QuoteFlow() {
+  const [product, setProduct] = useState(null);   // "basis" | "pro"
+  const [modules, setModules] = useState([]);      // Pro: valgte systemmoduler
+  const [addons, setAddons] = useState([]);        // Basis: fotodag/flerspråk
+  const [contact, setContact] = useState("");
+  const [done, setDone] = useState(false);
+
+  const toggleIn = (setter) => (v) =>
+    setter((cur) => (cur.includes(v) ? cur.filter((x) => x !== v) : [...cur, v]));
+  const toggleModule = toggleIn(setModules);
+  const toggleAddon = toggleIn(setAddons);
+
+  const pickProduct = (pr) => { setProduct(pr); setModules([]); setAddons([]); };
+
+  const estimate = (() => {
+    if (!product) return null;
+    if (product === "basis") {
+      let sum = QUOTE_PRICES.basis;
+      if (addons.includes("Foto- & filmdag")) sum += QUOTE_PRICES.fotodag;
+      if (addons.includes("Flerspråklig innhold")) sum += QUOTE_PRICES.flerspraak;
+      return sum;
+    }
+    let sum = QUOTE_PRICES.pro; // inkluderer fotodag + inntil 2 moduler
+    if (modules.length > 2) sum += (modules.length - 2) * QUOTE_PRICES.ekstraModul;
+    if (addons.includes("Flerspråklig innhold")) sum += QUOTE_PRICES.flerspraak;
+    return sum;
+  })();
+
+  const handleSubmit = () => {
+    if (!contact.trim() || !product) return;
+    // TODO (utvikler): send { product, modules, addons, estimate, contact }
+    // til API-rute / Formspree / e-post.
+    setDone(true);
+  };
+
+  if (done) {
+    return (
+      <div className="na-start-card na-start-done">
+        <RingIcon size={34} color="#B89968" style={{ margin: "0 auto 18px" }} />
+        <h3>Takk! Vi ser på det og ringer deg.</h3>
+        <p style={{ color: "var(--ink-dim)", lineHeight: 1.75 }}>
+          Du valgte {product === "pro" ? "Pro" : "Basis"}
+          {modules.length > 0 && <> med {modules.join(", ").toLowerCase()}</>}
+          {addons.length > 0 && <> og {addons.join(", ").toLowerCase()}</>}
+          {" "}— veiledende fra {estimate && nok(estimate)}. Vi tar én kort,
+          uforpliktende prat om detaljene, så får du fast pris etter befaringen.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="na-start-card na-quote-card">
+      <div className="na-start-q">1 · Hva passer dere best?</div>
+      <div className="na-quote-products">
+        <button type="button"
+          className={`na-quote-product ${product === "basis" ? "is-on" : ""}`}
+          onClick={() => pickProduct("basis")}>
+          <span className="na-quote-product-name">Basis</span>
+          <span className="na-quote-product-desc">En elegant nettside — på nett, på ordentlig</span>
+          <span className="na-quote-product-price">fra {nok(QUOTE_PRICES.basis)}</span>
+        </button>
+        <button type="button"
+          className={`na-quote-product ${product === "pro" ? "is-on" : ""}`}
+          onClick={() => pickProduct("pro")}>
+          <span className="na-quote-product-name">Pro</span>
+          <span className="na-quote-product-desc">Nettside + systemer + foto og film</span>
+          <span className="na-quote-product-price">fra {nok(QUOTE_PRICES.pro)}</span>
+        </button>
+      </div>
+
+      {product === "pro" && (
+        <>
+          <div className="na-start-q" style={{ marginTop: 34 }}>
+            2 · Hvilke systemer trenger dere? <span className="na-quote-hint">(inntil to er inkludert)</span>
+          </div>
+          <div className="na-start-chips">
+            {PRO_MODULES.map((m) => (
+              <button key={m} type="button"
+                className={`na-start-chip ${modules.includes(m) ? "is-on" : ""}`}
+                onClick={() => toggleModule(m)}>
+                {m}
+              </button>
+            ))}
+            <button type="button"
+              className={`na-start-chip ${addons.includes("Flerspråklig innhold") ? "is-on" : ""}`}
+              onClick={() => toggleAddon("Flerspråklig innhold")}>
+              Flerspråklig innhold (+{nok(QUOTE_PRICES.flerspraak)})
+            </button>
+          </div>
+        </>
+      )}
+
+      {product === "basis" && (
+        <>
+          <div className="na-start-q" style={{ marginTop: 34 }}>
+            2 · Vil dere legge til noe? <span className="na-quote-hint">(valgfritt)</span>
+          </div>
+          <div className="na-start-chips">
+            <button type="button"
+              className={`na-start-chip ${addons.includes("Foto- & filmdag") ? "is-on" : ""}`}
+              onClick={() => toggleAddon("Foto- & filmdag")}>
+              Foto- &amp; filmdag (+{nok(QUOTE_PRICES.fotodag)})
+            </button>
+            <button type="button"
+              className={`na-start-chip ${addons.includes("Flerspråklig innhold") ? "is-on" : ""}`}
+              onClick={() => toggleAddon("Flerspråklig innhold")}>
+              Flerspråklig innhold (+{nok(QUOTE_PRICES.flerspraak)})
+            </button>
+          </div>
+        </>
+      )}
+
+      {estimate && (
+        <div className="na-quote-estimate">
+          <span>Veiledende fra-pris</span>
+          <strong>{nok(estimate)}</strong>
+          <em>+ partneravtale fra 690 kr/mnd om du vil ha drift og support</em>
+        </div>
+      )}
+
+      {product && (
+        <div className="na-start-row">
+          <input className="na-start-input" type="text" inputMode="email"
+            placeholder="Telefon eller e-post"
+            value={contact}
+            onChange={(e) => setContact(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+            aria-label="Telefon eller e-post" />
+          <button type="button" className="na-start-btn"
+            onClick={handleSubmit} disabled={!contact.trim()}>
+            Få fast pris
+          </button>
+        </div>
+      )}
+      <div className="na-start-trust">
+        <span>Veiledende pris med en gang</span>
+        <span>Fast pris etter befaring</span>
+        <span>Helt uforpliktende</span>
+      </div>
+    </div>
   );
 }
 
@@ -1485,6 +1700,25 @@ export default function App() {
                 menneske å ringe. Ingen bindingstid utover tre måneder.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- TILBUDSFLYT ---------- */}
+      <section className="na-quote" id="tilbud">
+        <div className="na-wrap">
+          <div className="na-eyebrow na-reveal">Pro-modul 02 · i bruk på denne siden</div>
+          <h2 className="na-h2 na-reveal">
+            Sett sammen ditt prosjekt.<br />
+            Se prisen <em>med en gang.</em>
+          </h2>
+          <p className="na-lede na-reveal">
+            Ingen «ring oss for pris». Velg det dere trenger og få et veiledende
+            estimat på sekunder — og ja, dette er den samme tilbudsflyten vi
+            bygger for kunder som i dag taster priser på kalkulator over telefon.
+          </p>
+          <div className="na-reveal">
+            <QuoteFlow />
           </div>
         </div>
       </section>
