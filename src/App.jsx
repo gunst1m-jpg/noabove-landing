@@ -523,6 +523,18 @@ section { padding: 110px 0; position: relative; }
 .na-circle-labels h4 { font-family: var(--mono); font-size: 13px; letter-spacing: 0.1em; font-weight: 500; }
 .na-circle-labels p { color: var(--ink-dim); font-size: 14.5px; line-height: 1.7; margin-top: 6px; }
 
+/* ---------- Booking ---------- */
+.na-booking { border-top: 1px solid var(--line-soft); }
+.na-booking-embed {
+  margin-top: 50px; min-height: 640px;
+  border: 1px solid var(--line); border-radius: 4px;
+  background: rgba(20,20,18,0.5); overflow: hidden;
+}
+.na-booking-note {
+  margin-top: 18px; font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.08em; color: var(--ink-faint);
+}
+
 /* ---------- Kontakt ---------- */
 .na-contact { text-align: center; padding-bottom: 130px; }
 .na-contact h2 {
@@ -953,6 +965,7 @@ const MENU_LINKS = [
   { href: "#signatur", label: "Foto & film" },
   { href: "#prosess", label: "Slik jobber vi" },
   { href: "#modell", label: "Hva det koster" },
+  { href: "#befaring", label: "Book befaring" },
   { href: "#start", label: "Kom i gang — 20 sek", cta: true },
 ];
 
@@ -1006,6 +1019,78 @@ function BurgerMenu() {
         </div>
       </div>
     </>
+  );
+}
+
+/* ---------- Booking: Pro-modul 01, i bruk på denne siden ----------
+   Cal.com inline-embed i mørkt tema med merkets gullfarge.
+   VIKTIG: Opprett konto på cal.com, lag eventtypen «Befaring» (f.eks. 60 min),
+   og sett CAL_LINK under til din egen lenke (brukernavn/eventnavn). */
+
+const CAL_LINK = "team/gunstein-myre/befaring";
+
+function BookingSection() {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    // Offisiell Cal.com embed-snippet (lastes én gang)
+    (function (C, A, L) {
+      let p = function (a, ar) { a.q.push(ar); };
+      let d = C.document;
+      C.Cal = C.Cal || function () {
+        let cal = C.Cal, ar = arguments;
+        if (!cal.loaded) {
+          cal.ns = {}; cal.q = cal.q || [];
+          d.head.appendChild(d.createElement("script")).src = A;
+          cal.loaded = true;
+        }
+        if (ar[0] === L) {
+          const api = function () { p(api, arguments); };
+          const namespace = ar[1];
+          api.q = api.q || [];
+          if (typeof namespace === "string") {
+            cal.ns[namespace] = cal.ns[namespace] || api;
+            p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]);
+          } else p(cal, ar);
+          return;
+        }
+        p(cal, ar);
+      };
+    })(window, "https://app.cal.com/embed/embed.js", "init");
+
+    window.Cal("init", "befaring", { origin: "https://app.cal.com" });
+    window.Cal.ns.befaring("inline", {
+      elementOrSelector: containerRef.current,
+      calLink: CAL_LINK,
+      config: { theme: "dark", layout: "month_view" },
+    });
+    window.Cal.ns.befaring("ui", {
+      theme: "dark",
+      styles: { branding: { brandColor: "#B89968" } },
+      hideEventTypeDetails: false,
+    });
+  }, []);
+
+  return (
+    <section className="na-booking" id="befaring">
+      <div className="na-wrap">
+        <div className="na-eyebrow na-reveal">Pro-modul 01 · i bruk på denne siden</div>
+        <h2 className="na-h2 na-reveal">
+          Book befaringen <em>direkte.</em>
+        </h2>
+        <p className="na-lede na-reveal">
+          Velg et tidspunkt som passer deg — ingen telefonkø, ingen
+          e-poster frem og tilbake. Og legg merke til hva du nettopp brukte:
+          dette er den samme booking-modulen kundene våre får. Vi bygger
+          ingenting vi ikke bruker selv.
+        </p>
+        <div className="na-booking-embed na-reveal" ref={containerRef} />
+        <p className="na-booking-note na-reveal">
+          Helt uforpliktende · Vi møtes hos deg eller på video · Avbryt eller
+          flytt når som helst
+        </p>
+      </div>
+    </section>
   );
 }
 
@@ -1404,6 +1489,9 @@ export default function App() {
         </div>
       </section>
 
+      {/* ---------- BOOKING ---------- */}
+      <BookingSection />
+
       {/* ---------- BRANSJER ---------- */}
       <section className="na-industries">
         <div className="na-wrap">
@@ -1496,7 +1584,8 @@ export default function App() {
             <MiniStart />
           </div>
           <p className="na-start-alt na-reveal">
-            Liker du bedre å ta det direkte? &nbsp;
+            Klar for neste steg? <a href="#befaring">Book befaringen direkte</a>.
+            &nbsp;Eller ta det helt enkelt: &nbsp;
             <a href="mailto:post@noabove.no">post@noabove.no</a>
             &nbsp;·&nbsp;
             <a href="tel:+4700000000">Ring oss</a>
