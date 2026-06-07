@@ -643,6 +643,11 @@ section { padding: 110px 0; position: relative; }
 }
 .na-start-trust span { display: flex; align-items: center; gap: 7px; }
 .na-start-trust span::before { content: ""; width: 4px; height: 4px; border-radius: 50%; background: var(--amber); }
+.na-form-error {
+  margin-top: 16px; font-size: 13.5px; line-height: 1.6;
+  color: #d99a8a;
+}
+.na-form-error a { color: var(--amber-lift); }
 .na-start-done { text-align: center; padding: 26px 0 10px; }
 .na-start-done h3 { font-family: var(--serif); font-weight: 400; font-size: 26px; }
 .na-start-done p { font-size: 15px !important; margin-top: 14px !important; }
@@ -730,15 +735,27 @@ function MiniStart() {
   const [pains, setPains] = useState([]);
   const [contact, setContact] = useState("");
   const [done, setDone] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState(false);
 
   const toggle = (p) =>
     setPains((cur) => (cur.includes(p) ? cur.filter((x) => x !== p) : [...cur, p]));
 
-  const handleSubmit = () => {
-    if (!contact.trim()) return;
-    // TODO (utvikler): send { pains, contact } til API-rute / Formspree / e-post.
-    // fetch("/api/lead", { method: "POST", body: JSON.stringify({ pains, contact }) });
-    setDone(true);
+  const handleSubmit = async () => {
+    if (!contact.trim() || sending) return;
+    setSending(true); setError(false);
+    try {
+      await sendLead({
+        skjema: "Kom i gang (20 sek)",
+        utfordringer: pains.join(", ") || "—",
+        kontakt: contact.trim(),
+      });
+      setDone(true);
+    } catch (_) {
+      setError(true);
+    } finally {
+      setSending(false);
+    }
   };
 
   if (done) {
@@ -784,11 +801,17 @@ function MiniStart() {
           type="button"
           className="na-start-btn"
           onClick={handleSubmit}
-          disabled={!contact.trim()}
+          disabled={!contact.trim() || sending}
         >
-          Ta kontakt med meg
+          {sending ? "Sender…" : "Ta kontakt med meg"}
         </button>
       </div>
+      {error && (
+        <p className="na-form-error">
+          Noe gikk galt med innsendingen. Prøv igjen — eller send oss en
+          e-post på <a href="mailto:post@noabove.no">post@noabove.no</a>.
+        </p>
+      )}
       <div className="na-start-trust">
         <span>Tar 20 sekunder</span>
         <span>Helt uforpliktende</span>
@@ -1145,6 +1168,22 @@ function BookingSection() {
   );
 }
 
+/* ---------- Skjema-innsending (Formspree) ----------
+   Opprett gratis konto på formspree.io, lag et skjema («New form»),
+   og lim inn ID-en (f.eks. "mzzpqrwd") under. Begge skjemaene på siden
+   sender hit, og henvendelsene lander i e-posten din. */
+
+const FORMSPREE_ID = "DIN-FORMSPREE-ID"; // ← bytt til din egen ID
+
+async function sendLead(payload) {
+  const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error("Innsending feilet");
+}
+
 /* ---------- Tilbudsflyt: Pro-modul 02, i bruk på denne siden ----------
    Kunden setter sammen sitt prosjekt og får veiledende pris med en gang.
    Henvendelsen kommer ferdig strukturert. Samme TODO som MiniStart:
@@ -1171,6 +1210,8 @@ function QuoteFlow() {
   const [addons, setAddons] = useState([]);        // Basis: fotodag/flerspråk
   const [contact, setContact] = useState("");
   const [done, setDone] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState(false);
 
   const toggleIn = (setter) => (v) =>
     setter((cur) => (cur.includes(v) ? cur.filter((x) => x !== v) : [...cur, v]));
@@ -1193,11 +1234,24 @@ function QuoteFlow() {
     return sum;
   })();
 
-  const handleSubmit = () => {
-    if (!contact.trim() || !product) return;
-    // TODO (utvikler): send { product, modules, addons, estimate, contact }
-    // til API-rute / Formspree / e-post.
-    setDone(true);
+  const handleSubmit = async () => {
+    if (!contact.trim() || !product || sending) return;
+    setSending(true); setError(false);
+    try {
+      await sendLead({
+        skjema: "Tilbudsflyt",
+        produkt: product === "pro" ? "Pro" : "Basis",
+        moduler: modules.join(", ") || "—",
+        tillegg: addons.join(", ") || "—",
+        veiledende_pris: estimate ? nok(estimate) : "—",
+        kontakt: contact.trim(),
+      });
+      setDone(true);
+    } catch (_) {
+      setError(true);
+    } finally {
+      setSending(false);
+    }
   };
 
   if (done) {
@@ -1295,10 +1349,16 @@ function QuoteFlow() {
             onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
             aria-label="Telefon eller e-post" />
           <button type="button" className="na-start-btn"
-            onClick={handleSubmit} disabled={!contact.trim()}>
-            Få fast pris
+            onClick={handleSubmit} disabled={!contact.trim() || sending}>
+            {sending ? "Sender…" : "Få fast pris"}
           </button>
         </div>
+      )}
+      {error && (
+        <p className="na-form-error">
+          Noe gikk galt med innsendingen. Prøv igjen — eller send oss en
+          e-post på <a href="mailto:post@noabove.no">post@noabove.no</a>.
+        </p>
       )}
       <div className="na-start-trust">
         <span>Veiledende pris med en gang</span>
