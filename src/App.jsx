@@ -412,6 +412,45 @@ section { padding: 110px 0; position: relative; }
   align-items: stretch;
 }
 @media (max-width: 860px) { .na-model-grid { grid-template-columns: 1fr; } }
+.na-partner-band {
+  margin-top: 26px; padding: 30px 36px; border-radius: 4px;
+  border: 1px solid var(--line); background: rgba(20,20,18,0.5);
+}
+.na-partner-band-tag {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--amber);
+}
+.na-partner-band p {
+  color: var(--ink-dim); line-height: 1.7; font-size: 15px;
+  margin-top: 12px; max-width: 760px;
+}
+
+/* Basis-banner i modulseksjonen */
+.na-base-banner {
+  margin-top: 56px; padding: 38px 40px; border-radius: 4px;
+  border: 1px solid rgba(184,153,104,0.35);
+  background:
+    radial-gradient(ellipse 80% 120% at 0% 0%, rgba(184,153,104,0.07), transparent 70%),
+    rgba(20,20,18,0.5);
+}
+@media (max-width: 600px) { .na-base-banner { padding: 28px 24px; } }
+.na-base-banner-tag {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--amber);
+}
+.na-base-banner h3 {
+  font-family: var(--serif); font-weight: 400; font-size: clamp(22px, 3vw, 30px);
+  margin-top: 14px; letter-spacing: -0.01em;
+}
+.na-base-banner p {
+  color: var(--ink-dim); line-height: 1.7; font-size: 15px;
+  margin-top: 14px; max-width: 720px;
+}
+.na-modules-label {
+  margin-top: 52px; font-family: var(--mono); font-size: 12px;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-faint);
+}
+.na-modules-grid { margin-top: 22px; }
 .na-model-card {
   border: 1px solid var(--line); background: rgba(20,20,18,0.62);
   backdrop-filter: blur(2px);
@@ -1038,7 +1077,7 @@ const MODULES = [
     num: "04",
     title: "Presentasjon & visning",
     text:
-      "Når produktet ditt må sees for å selges: gallerier, visningssider og filmatiske presentasjoner bygget rundt ekte foto og film — fotografert av oss, hos deg.",
+      "Når produktet ditt må sees for å selges: gallerier, visningssider og filmatiske presentasjoner. Spiller spesielt godt sammen med foto- og film-tillegget, men fungerer også med dine egne bilder.",
     forWho: ["Eiendom", "Opplevelser", "Restaurant", "Merkevarer"],
   },
 ];
@@ -1051,28 +1090,28 @@ const STEPS = [
       "Det starter med en kort telefonsamtale — fem minutter, helt uforpliktende. Vil du gå videre, kommer vi innom og ser hvordan dere faktisk jobber. Du får et konkret forslag med fast pris, og kan si ja eller nei i ro og mak.",
   },
   {
-    week: "Uke 1–2",
-    title: "Fundament & fotodag",
+    week: "Uke 1",
+    title: "Fundament — og fotodag i Pro",
     text:
-      "Vi setter den visuelle retningen og gjennomfører foto- og filmdag i lokalene dine: ansatte, håndverk, atmosfære. Dette materialet blir ryggraden i alt vi bygger — og det er ditt for alltid.",
+      "Vi setter den visuelle retningen. I Pro gjennomfører vi også foto- og filmdag i lokalene dine: ansatte, håndverk, atmosfære. Materialet blir ryggraden i alt vi bygger — og det er ditt for alltid.",
   },
   {
-    week: "Uke 2–5",
+    week: "Uke 1–3",
     title: "Bygging",
     text:
-      "Nettside og systemmoduler bygges, testes og finpusses. Du følger med underveis og gir tilbakemelding på ekte, fungerende versjoner — ikke skisser og PDF-er.",
+      "Nettside og eventuelle systemmoduler bygges, testes og finpusses. Du følger med underveis og gir tilbakemelding på ekte, fungerende versjoner — ikke skisser og PDF-er.",
   },
   {
-    week: "Uke 5–6",
+    week: "Uke 2–4",
     title: "Lansering",
     text:
-      "Domene, drift, sikkerhet og personvern på plass. Vi lærer opp deg og dine ansatte, og står ved siden av dere de første ukene til alt sitter.",
+      "Domene, drift, sikkerhet og personvern på plass. Basis er gjerne live etter en uke eller to, Pro etter to til fire. Vi lærer opp dere som skal bruke det, og står ved siden av de første ukene til alt sitter.",
   },
   {
     week: "Videre",
     title: "Partnerskap",
     text:
-      "Systemet lever videre med drift, support og videreutvikling. Små endringer skjer fortløpende, og en årlig foto- og filmoppdatering holder uttrykket levende.",
+      "Siden lever videre med drift, support og videreutvikling gjennom partneravtalen. Små endringer skjer fortløpende, og en årlig oppfriskning holder uttrykket levende.",
   },
 ];
 
@@ -1153,7 +1192,7 @@ export default function App() {
           </div>
           <div className="na-intro-facts na-reveal">
             <span><strong>Base</strong> · Kristiansand</span>
-            <span><strong>Leveranse</strong> · 4–6 uker</span>
+            <span><strong>Levering</strong> · 1–4 uker</span>
             <span><strong>Modell</strong> · Fast pris + partneravtale</span>
           </div>
         </div>
@@ -1183,7 +1222,7 @@ export default function App() {
                 derfor vi leverer på uker, ikke måneder, til en brøkdel av
                 tradisjonell byråpris. Men alt som møter kundene dine er
                 håndverk: gjennomtenkt design, profesjonelt fotografi og film
-                med tjue års fartstid bak kameraet.
+                med femten års fartstid bak kameraet.
               </p>
               <p>
                 Vi spyr ikke ut innlegg på autopilot. Vi bygger grunnmuren din.
@@ -1198,21 +1237,35 @@ export default function App() {
         <div className="na-wrap">
           <div className="na-modules-head">
             <div>
-              <div className="na-eyebrow na-reveal">Fire moduler</div>
+              <div className="na-eyebrow na-reveal">Slik henger det sammen</div>
               <h2 className="na-h2 na-reveal">
-                Ett konsept. Fire byggeklosser.<br />
-                <em>Din</em> kombinasjon.
+                Basis er nettsiden.<br />
+                <em>Pro</em> setter den i arbeid.
               </h2>
             </div>
             <p className="na-lede na-reveal" style={{ maxWidth: 380 }}>
-              Hver bedrift får en skreddersydd nettside bygget på modulene den
-              faktisk trenger — ikke mer, ikke mindre.
+              Alle starter med det samme elegante grunnlaget. Velger du Pro,
+              legger vi på systemene og innholdet som driver hverdagen — nå
+              eller når behovet melder seg.
             </p>
           </div>
+
+          <div className="na-base-banner na-reveal">
+            <div className="na-base-banner-tag">Basis · fra 14 900 kr</div>
+            <h3>En elegant nettside, bygget rundt din identitet</h3>
+            <p>
+              Rask, mobilvennlig og søkbar, med din visuelle profil, tekst og et
+              smart kontaktpunkt — henvendelser kommer ferdig strukturert, og du
+              svarer alltid selv. Komplett i seg selv, levert på 1–2 uker — og
+              klar til å vokse den dagen du vil ha mer.
+            </p>
+          </div>
+
+          <div className="na-modules-label na-reveal">Pro: velg systemene dere trenger</div>
           <div className="na-modules-grid">
             {MODULES.map((m) => (
               <article className="na-module na-reveal" key={m.num}>
-                <div className="na-module-num">Modul {m.num}</div>
+                <div className="na-module-num">Pro-modul {m.num}</div>
                 <h3>{m.title}</h3>
                 <p>{m.text}</p>
                 <div className="na-module-for">
@@ -1227,16 +1280,17 @@ export default function App() {
       {/* ---------- SIGNATUR: FOTO & FILM ---------- */}
       <section className="na-signature" id="signatur">
         <div className="na-wrap na-signature-inner">
-          <div className="na-eyebrow na-reveal">Signaturen vår</div>
+          <div className="na-eyebrow na-reveal">Inkludert i Pro · Signaturen vår</div>
           <h2 className="na-reveal">
             Ekte mennesker.<br />
             Ekte lys. <em>Ekte arbeid.</em>
           </h2>
           <p className="na-reveal">
-            Hvert prosjekt starter med en foto- og filmdag hos deg. Ansiktene,
+            Hvert Pro-prosjekt starter med en foto- og filmdag hos deg. Ansiktene,
             hendene, lokalene, håndverket — fotografert og filmet av en som har
-            levd av det i tjue år. I en verden av generert glatthet er
-            ekthet den sterkeste merkevaren du kan ha.
+            levd av det i femten år. I en verden av generert glatthet er
+            ekthet den sterkeste merkevaren du kan ha. Basis-kunder kan legge
+            den til når som helst.
           </p>
           <div className="na-signature-points">
             <div className="na-sigpoint na-reveal">
@@ -1269,7 +1323,7 @@ export default function App() {
         <div className="na-wrap">
           <div className="na-eyebrow na-reveal">Slik jobber vi</div>
           <h2 className="na-h2 na-reveal">
-            Fra befaring til lansering<br />på <em>fire til seks uker</em>
+            Fra befaring til lansering<br />på <em>én til fire uker</em>
           </h2>
           <div className="na-process-list">
             {STEPS.map((s) => (
@@ -1288,55 +1342,63 @@ export default function App() {
         <div className="na-wrap">
           <div className="na-eyebrow na-reveal">Modellen</div>
           <h2 className="na-h2 na-reveal">
-            Fast pris på prosjektet.<br />
-            <em>Partner</em> på veien videre.
+            To produkter.<br /><em>Ett enkelt valg.</em>
           </h2>
           <p className="na-lede na-reveal">
-            Ingen timepriser som løper, ingen overraskelser på fakturaen. Du
-            vet hva det koster før vi starter — og hva det koster å holde det
-            levende etterpå.
+            Fast pris på begge, ingen timepriser som løper. Basis får deg
+            skikkelig på nett. Pro legger på systemene og innholdet som driver
+            hverdagen. Endelig pris avtales på befaringen.
           </p>
           <div className="na-model-grid">
             <div className="na-model-card na-reveal">
-              <div className="na-model-tag">Steg 1 — Prosjekt</div>
-              <h3>Grunnmuren</h3>
-              <div className="na-model-price">Fast pris fra 60 000 kr</div>
+              <div className="na-model-tag">Basis · fast pris</div>
+              <h3>På nett, på ordentlig</h3>
+              <div className="na-model-price">Fra 14 900 kr · levert på 1–2 uker</div>
               <p>
-                Komplett nettside med modulene din bedrift trenger, levert
-                ferdig på 4–6 uker. Prisen avtales på befaring og avhenger av
-                hvilke moduler og integrasjoner du trenger.
+                En elegant, komplett nettside med deres egen identitet — satt
+                opp av et menneske med blikk for det. Alt en liten bedrift
+                trenger for å være ordentlig til stede på nett.
               </p>
               <ul className="na-model-list">
-                <li>Skreddersydd nettside med din visuelle identitet</li>
-                <li>1–2 systemmoduler (booking, tilbud, portal eller visning)</li>
-                <li>Foto- og filmdag med ansattportretter og bildebank</li>
+                <li>Skreddersydd design med din visuelle profil</li>
+                <li>Mobilvennlig, rask og søkbar (SEO-grunnlag)</li>
+                <li>Smart kontaktpunkt: henvendelser kommer ferdig strukturert — du svarer alltid selv</li>
                 <li>Domene, sikkerhet og personvern (GDPR) på plass</li>
-                <li>Opplæring av deg og dine ansatte</li>
+                <li>Opplæring så du kan gjøre småendringer selv</li>
               </ul>
               <div className="na-model-note">
-                Du eier alt: kode, innhold, bilder og film.
+                Du eier alt: kode, innhold og bilder.
               </div>
             </div>
             <div className="na-model-card is-amber na-reveal">
-              <div className="na-model-tag">Steg 2 — Partneravtale</div>
-              <h3>Levende system</h3>
-              <div className="na-model-price">Fra 2 900 kr/mnd</div>
+              <div className="na-model-tag">Pro · fast pris</div>
+              <h3>Hele grunnmuren</h3>
+              <div className="na-model-price">Fra 49 000 kr · levert på 2–4 uker</div>
               <p>
-                Et system du er avhengig av hver dag skal ikke stå og forfalle.
-                Partneravtalen holder det driftet, sikkert og i utvikling — med
-                ett menneske å ringe, ikke en supportkø.
+                Alt i Basis, pluss det som setter siden i arbeid: systemene
+                hverdagen din trenger, og ekte foto og film av folkene og
+                lokalene dine.
               </p>
               <ul className="na-model-list">
-                <li>Drift, hosting, sikkerhet og overvåking</li>
-                <li>Support og småendringer fortløpende</li>
-                <li>Videreutvikling av modulene etter hvert som dere vokser</li>
-                <li>Årlig foto- og filmoppdatering så uttrykket holder seg ferskt</li>
-                <li>Ingen bindingstid utover tre måneder</li>
+                <li>Alt som er med i Basis</li>
+                <li>1–2 systemmoduler: booking, tilbudsflyt eller kundeportal</li>
+                <li>Foto- og filmdag med ansattportretter og bildebank</li>
+                <li>Tekst og innhold spisset for salg</li>
+                <li>Opplæring av hele teamet</li>
               </ul>
               <div className="na-model-note">
-                Til sammenligning: et tradisjonelt byrå tar 800–2 500 kr —{" "}
-                per time.
+                Hvilke moduler? Det finner vi ut sammen på befaringen.
               </div>
+            </div>
+          </div>
+          <div className="na-partner-band na-reveal">
+            <div>
+              <div className="na-partner-band-tag">Partneravtale · fra 690 kr/mnd</div>
+              <p>
+                Hvem passer på dette etterpå? Det gjør vi. Drift, sikkerhet,
+                support og videreutvikling — på begge produktene, med ett
+                menneske å ringe. Ingen bindingstid utover tre måneder.
+              </p>
             </div>
           </div>
         </div>
@@ -1404,7 +1466,7 @@ export default function App() {
                 <div>
                   <h4>NOABOVE</h4>
                   <p>
-                    Dømmekraften og håndverket. Tjue år med foto og film, og
+                    Dømmekraften og håndverket. Femten år med foto og film, og
                     ansvaret for at alt som lanseres faktisk holder mål.
                   </p>
                 </div>
