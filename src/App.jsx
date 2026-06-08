@@ -418,6 +418,34 @@ section { padding: 110px 0; position: relative; }
 .na-sigpoint h4 { font-family: var(--mono); font-size: 13px; letter-spacing: 0.1em; font-weight: 500; }
 .na-sigpoint p { font-size: 14px; margin-top: 10px; line-height: 1.7; text-align: left; }
 
+/* ---------- Utvalgt arbeid ---------- */
+.na-work { border-top: 1px solid var(--line-soft); }
+.na-work-grid {
+  margin-top: 54px;
+  column-count: 3; column-gap: 16px;
+}
+@media (max-width: 860px) { .na-work-grid { column-count: 2; } }
+@media (max-width: 520px) { .na-work-grid { column-count: 1; } }
+.na-work-item {
+  position: relative; margin: 0 0 16px; break-inside: avoid;
+  border-radius: 3px; overflow: hidden; background: rgba(20,20,18,0.5);
+}
+.na-work-item img {
+  display: block; width: 100%; height: auto;
+  filter: saturate(0.96) contrast(1.02);
+  transition: transform .6s cubic-bezier(.16,.84,.32,1);
+}
+.na-work-item:hover img { transform: scale(1.04); }
+.na-work-item figcaption {
+  position: absolute; left: 14px; bottom: 12px;
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ink);
+  background: rgba(14,14,13,0.6); backdrop-filter: blur(6px);
+  padding: 5px 11px; border-radius: 100px;
+  opacity: 0; transform: translateY(6px); transition: opacity .3s, transform .3s;
+}
+.na-work-item:hover figcaption { opacity: 1; transform: translateY(0); }
+
 /* ---------- Prosess ---------- */
 .na-process-list { margin-top: 64px; border-top: 1px solid var(--line); }
 .na-step {
@@ -1097,6 +1125,7 @@ function RingAssembly() {
 const MENU_LINKS = [
   { href: "#hva", label: "Hva vi gjør" },
   { href: "#signatur", label: "Foto & film" },
+  { href: "#arbeid", label: "Utvalgt arbeid" },
   { href: "#prosess", label: "Slik jobber vi" },
   { href: "#modell", label: "Hva det koster" },
   { href: "#tilbud", label: "Se din pris" },
@@ -1493,6 +1522,60 @@ function FaqSection() {
   );
 }
 
+/* ---------- Utvalgt arbeid (portefølje) ----------
+   Laster automatisk ALLE bilder i src/assets/arbeid/. Vil du endre utvalget,
+   bare legg til eller fjern filer i den mappen — ingen kodeendring nødvendig.
+   Bildene vises i alfabetisk rekkefølge (filnavnet styrer rekkefølgen). */
+
+const workModules = import.meta.glob(
+  "./assets/arbeid/*.{jpg,jpeg,png,JPG,JPEG,PNG}",
+  { eager: true }
+);
+
+function tagFor(path) {
+  const f = path.split("/").pop().toLowerCase();
+  if (f.startsWith("skov")) return "Skov";
+  if (f.startsWith("nkom")) return "Nkom";
+  if (f.startsWith("natrening")) return "Trening";
+  if (f.startsWith("lade")) return "Lading";
+  if (f.startsWith("havvind")) return "Havvind";
+  if (f.startsWith("cirkus")) return "Cirkus Arnardo";
+  if (f.startsWith("candela")) return "Candela";
+  if (f.startsWith("mer")) return "Mer";
+  return "Foto";
+}
+
+const WORK = Object.entries(workModules)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([path, mod]) => ({ src: mod.default, tag: tagFor(path) }));
+
+function PortfolioSection() {
+  if (WORK.length === 0) return null;
+  return (
+    <section className="na-work" id="arbeid">
+      <div className="na-wrap">
+        <div className="na-eyebrow na-reveal">Utvalgt arbeid</div>
+        <h2 className="na-h2 na-reveal">
+          Ekte bilder. <em>Ekte bedrifter.</em>
+        </h2>
+        <p className="na-lede na-reveal">
+          Et utvalg fra femten år bak kameraet — folk, produkter og steder,
+          fotografert slik de faktisk er. Dette er materialet som blir
+          ryggraden i en Noabove-side.
+        </p>
+        <div className="na-work-grid na-reveal">
+          {WORK.map((w, i) => (
+            <figure className="na-work-item" key={i}>
+              <img src={w.src} alt={`Foto av Gunstein Myre — ${w.tag}`} loading="lazy" />
+              <figcaption>{w.tag}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* Scroll-reveal hook */
 function useReveal() {
   useEffect(() => {
@@ -1837,6 +1920,9 @@ export default function App() {
           </div>
         </div>
       </section>
+
+      {/* ---------- UTVALGT ARBEID ---------- */}
+      <PortfolioSection />
 
       {/* ---------- PROSESS ---------- */}
       <section id="prosess">
