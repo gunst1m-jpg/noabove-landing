@@ -328,6 +328,30 @@ section { padding: 110px 0; position: relative; }
 .na-manifest-body p + p { margin-top: 20px; }
 .na-manifest-body strong { color: var(--ink); font-weight: 500; }
 
+/* ---------- Hva vi gjør: tre søyler ---------- */
+.na-pillars { border-bottom: 1px solid var(--line-soft); }
+.na-pillars-grid {
+  margin-top: 60px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  background: var(--line-soft); border: 1px solid var(--line-soft);
+}
+@media (max-width: 760px) { .na-pillars-grid { grid-template-columns: 1fr; } }
+.na-pillar {
+  background: var(--bg); padding: 44px 40px 48px;
+  transition: background .35s;
+}
+.na-pillar:hover { background: rgba(242,240,235,0.025); }
+.na-pillar-num {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em;
+  color: var(--amber);
+}
+.na-pillar h3 {
+  font-family: var(--serif); font-weight: 400; font-size: 28px;
+  margin-top: 16px; letter-spacing: -0.01em;
+}
+.na-pillar p {
+  color: var(--ink-dim); line-height: 1.75; font-size: 15px; margin-top: 14px;
+}
+
 /* ---------- Moduler ---------- */
 .na-modules-head { display: flex; justify-content: space-between; align-items: end; gap: 40px; flex-wrap: wrap; }
 .na-modules-grid {
@@ -1071,7 +1095,7 @@ function RingAssembly() {
 /* ---------- Hamburgermeny ---------- */
 
 const MENU_LINKS = [
-  { href: "#moduler", label: "Hva vi bygger" },
+  { href: "#hva", label: "Hva vi gjør" },
   { href: "#signatur", label: "Foto & film" },
   { href: "#prosess", label: "Slik jobber vi" },
   { href: "#modell", label: "Hva det koster" },
@@ -1692,6 +1716,42 @@ export default function App() {
         </div>
       </section>
 
+      {/* ---------- HVA VI GJØR (tre søyler) ---------- */}
+      <section className="na-pillars" id="hva">
+        <div className="na-wrap">
+          <div className="na-eyebrow na-reveal">Hva vi gjør</div>
+          <h2 className="na-h2 na-reveal">
+            Tre ting, gjort <em>skikkelig.</em>
+          </h2>
+          <div className="na-pillars-grid">
+            <div className="na-pillar na-reveal">
+              <div className="na-pillar-num">01</div>
+              <h3>Bygge</h3>
+              <p>
+                Nettsider og systemene som driver hverdagen — booking, tilbud
+                og kundeportal. Det digitale fundamentet bedriften står på.
+              </p>
+            </div>
+            <div className="na-pillar na-reveal">
+              <div className="na-pillar-num">02</div>
+              <h3>Vise</h3>
+              <p>
+                Foto og film av ekte mennesker og lokaler — skutt av oss, hos
+                deg, med femten år bak kameraet. Aldri innleid, aldri generert.
+              </p>
+            </div>
+            <div className="na-pillar na-reveal">
+              <div className="na-pillar-num">03</div>
+              <h3>Synliggjøre</h3>
+              <p>
+                Hjelp til å bli sett av de rette kundene — søkbarhet og smarte
+                kontaktpunkter som gjør besøkende om til henvendelser.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ---------- MODULER ---------- */}
       <section id="moduler">
         <div className="na-wrap">
@@ -1746,11 +1806,11 @@ export default function App() {
             Ekte lys. <em>Ekte arbeid.</em>
           </h2>
           <p className="na-reveal">
-            Hvert Pro-prosjekt starter med en foto- og filmdag hos deg. Ansiktene,
-            hendene, lokalene, håndverket — fotografert og filmet av en som har
-            levd av det i femten år. I en verden av generert glatthet er
-            ekthet den sterkeste merkevaren du kan ha. Basis-kunder kan legge
-            den til når som helst.
+            Vi setter ikke bort dette. Hvert Pro-prosjekt starter med en foto- og
+            filmdag hos deg, skutt med vårt eget kamera — ansiktene, hendene,
+            lokalene, håndverket — av en som har levd av det i femten år. I en
+            verden av generert glatthet er ekthet den sterkeste merkevaren du kan
+            ha. Basis-kunder kan legge den til når som helst.
           </p>
           <div className="na-signature-points">
             <div className="na-sigpoint na-reveal">
