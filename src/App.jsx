@@ -585,6 +585,43 @@ section { padding: 110px 0; position: relative; }
   letter-spacing: 0.08em; color: var(--ink-faint);
 }
 
+/* ---------- FAQ ---------- */
+.na-faq { border-top: 1px solid var(--line-soft); }
+.na-faq-list { margin-top: 50px; border-top: 1px solid var(--line); }
+.na-faq-item { border-bottom: 1px solid var(--line); }
+.na-faq-q {
+  width: 100%; background: none; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  padding: 26px 4px; text-align: left;
+  font-family: var(--serif); font-weight: 400; font-size: clamp(18px, 2.2vw, 23px);
+  color: var(--ink); transition: color .25s;
+}
+.na-faq-q:hover { color: var(--amber-lift); }
+.na-faq-mark {
+  position: relative; flex: none; width: 16px; height: 16px;
+}
+.na-faq-mark::before, .na-faq-mark::after {
+  content: ""; position: absolute; background: var(--amber);
+  transition: transform .3s cubic-bezier(.16,.84,.32,1), opacity .3s;
+}
+.na-faq-mark::before { top: 7px; left: 0; width: 16px; height: 1.5px; }
+.na-faq-mark::after { left: 7px; top: 0; width: 1.5px; height: 16px; }
+.na-faq-item.is-open .na-faq-mark::after { transform: scaleY(0); opacity: 0; }
+.na-faq-a {
+  overflow: hidden; max-height: 0;
+  transition: max-height .4s cubic-bezier(.16,.84,.32,1);
+}
+.na-faq-item.is-open .na-faq-a { max-height: 460px; }
+.na-faq-a > p {
+  margin: 0; padding: 2px 0 26px;
+  color: var(--ink-dim); font-size: 16px; line-height: 1.75;
+  max-width: 720px;
+}
+
+/* Bedre linjedeling overalt: balanserte overskrifter, ingen foreldreløse ord */
+h1, h2, h3, .na-manifest-state { text-wrap: balance; }
+p, li, .na-lede { text-wrap: pretty; }
+
 /* ---------- Kontakt ---------- */
 .na-contact { text-align: center; padding-bottom: 130px; }
 .na-contact h2 {
@@ -809,7 +846,7 @@ function MiniStart() {
       {error && (
         <p className="na-form-error">
           Noe gikk galt med innsendingen. Prøv igjen — eller send oss en
-          e-post på <a href="mailto:post@noabove.no">post@noabove.no</a>.
+          e-post på <a href="mailto:post@noabove.com">post@noabove.com</a>.
         </p>
       )}
       <div className="na-start-trust">
@@ -1040,6 +1077,7 @@ const MENU_LINKS = [
   { href: "#modell", label: "Hva det koster" },
   { href: "#tilbud", label: "Se din pris" },
   { href: "#befaring", label: "Book befaring" },
+  { href: "#faq", label: "Spørsmål & svar" },
   { href: "#start", label: "Kom i gang — 20 sek", cta: true },
 ];
 
@@ -1088,7 +1126,7 @@ function BurgerMenu() {
             ))}
           </ul>
           <div className="na-menu-foot">
-            post@noabove.no · Kristiansand
+            post@noabove.com · Kristiansand
           </div>
         </div>
       </div>
@@ -1357,7 +1395,7 @@ function QuoteFlow() {
       {error && (
         <p className="na-form-error">
           Noe gikk galt med innsendingen. Prøv igjen — eller send oss en
-          e-post på <a href="mailto:post@noabove.no">post@noabove.no</a>.
+          e-post på <a href="mailto:post@noabove.com">post@noabove.com</a>.
         </p>
       )}
       <div className="na-start-trust">
@@ -1366,6 +1404,68 @@ function QuoteFlow() {
         <span>Helt uforpliktende</span>
       </div>
     </div>
+  );
+}
+
+/* ---------- FAQ / innvendinger ---------- */
+
+const FAQ = [
+  {
+    q: "Kan jeg ikke bare lage dette selv med AI?",
+    a: "Du kan det — men de fleste gjør det ikke, eller blir ikke fornøyde med resultatet. Verktøy har vært billige og enkle i femten år, og likevel har de fleste bedrifter en utdatert side. Forskjellen er ikke tilgang til verktøy, men tid, smak og at det faktisk blir ferdig. Det er det du betaler oss for.",
+  },
+  {
+    q: "Eier jeg nettsiden, eller leier jeg den av dere?",
+    a: "Du eier alt — koden, innholdet og bildene. Vi låser deg aldri inne. Partneravtalen er en tjeneste du kan si opp; nettsiden blir værende din uansett.",
+  },
+  {
+    q: "Hva om jeg vil endre noe senere?",
+    a: "Småendringer kan du gjøre selv etter en kort opplæring. Vil du heller slippe, tar partneravtalen seg av løpende endringer — du sender en beskjed, så fikser vi det.",
+  },
+  {
+    q: "Må jeg binde meg til en avtale?",
+    a: "Nei. Selve nettsiden er en fast pris uten binding. Partneravtalen har tre måneders oppsigelse — ikke noe mer. Vi vil at du blir fordi det fungerer, ikke fordi du må.",
+  },
+  {
+    q: "Hva hvis jeg bare trenger en enkel side?",
+    a: "Da er Basis laget for deg. En elegant, komplett nettside uten systemer og tillegg — og du kan alltid bygge på senere hvis behovet melder seg.",
+  },
+  {
+    q: "Hvorfor ekte foto når AI kan lage bilder?",
+    a: "Fordi kundene dine kjenner forskjellen. Når halve internett er syntetisk, blir ekte ansikter og ekte lokaler det sterkeste tillitssignalet du har. Det er hele tanken vår: AI i maskinrommet, mennesker foran kamera.",
+  },
+];
+
+function FaqSection() {
+  const [open, setOpen] = useState(null);
+  return (
+    <section className="na-faq" id="faq">
+      <div className="na-wrap">
+        <div className="na-eyebrow na-reveal">Det du lurer på</div>
+        <h2 className="na-h2 na-reveal">Spørsmål vi får ofte</h2>
+        <div className="na-faq-list na-reveal">
+          {FAQ.map((item, i) => (
+            <div
+              className={`na-faq-item ${open === i ? "is-open" : ""}`}
+              key={i}
+            >
+              <button
+                type="button"
+                className="na-faq-q"
+                onClick={() => setOpen(open === i ? null : i)}
+                aria-expanded={open === i}
+              >
+                <span>{item.q}</span>
+                <span className="na-faq-mark" aria-hidden="true" />
+              </button>
+              <div className="na-faq-a">
+                <p>{item.a}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -1523,7 +1623,7 @@ export default function App() {
           <span className="arrow" aria-hidden="true">↓</span>
         </a>
         <div className="na-hero-bar" aria-hidden="true">
-          <span>noabove.no</span>
+          <span>noabove.com</span>
           <span>Kristiansand · Norge</span>
         </div>
       </header>
@@ -1539,9 +1639,9 @@ export default function App() {
           </h1>
           <p className="na-intro-lede na-reveal">
             Noabove bygger nettsider med systemene som driver hverdagen din —
-            booking, tilbud, kundeportal — og dokumenterer bedriften din med
-            ekte foto og film. Bygget raskt med AI i maskinrommet.
-            Aldri kunstig der kundene dine ser.
+            booking, tilbud og kundeportal — og forteller historien deres med
+            ekte foto og film av folkene og lokalene. Vi jobber raskt med smarte
+            verktøy, men alt kundene dine møter er ekte.
           </p>
           <div className="na-intro-cta na-reveal">
             <a className="na-btn na-btn-solid" href="#start">Fortell oss hva som stjeler tid</a>
@@ -1861,6 +1961,9 @@ export default function App() {
         </div>
       </section>
 
+      {/* ---------- FAQ ---------- */}
+      <FaqSection />
+
       {/* ---------- KOM I GANG ---------- */}
       <section className="na-contact" id="start">
         <div className="na-wrap">
@@ -1880,7 +1983,7 @@ export default function App() {
           <p className="na-start-alt na-reveal">
             Klar for neste steg? <a href="#befaring">Book befaringen direkte</a>.
             &nbsp;Eller ta det helt enkelt: &nbsp;
-            <a href="mailto:post@noabove.no">post@noabove.no</a>
+            <a href="mailto:post@noabove.com">post@noabove.com</a>
             &nbsp;·&nbsp;
             <a href="tel:+4700000000">Ring oss</a>
           </p>
